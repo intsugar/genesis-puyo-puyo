@@ -40,7 +40,7 @@
       width: 95vw;
     }
 
-    /* Top accent stripe — Genesis purple/blue */
+    /* Top accent stripe */
     #console-body::before {
       content: '';
       position: absolute;
@@ -50,7 +50,6 @@
       border-radius: 10px 10px 0 0;
     }
 
-    /* Cartridge slot */
     #cartridge-slot {
       background: linear-gradient(180deg, #0e0e0e, #181818);
       height: 5px;
@@ -59,29 +58,6 @@
       box-shadow: 0 1px 0 rgba(255,255,255,0.04), 0 -1px 2px rgba(0,0,0,0.5) inset;
     }
 
-    /* Volume slider decorative */
-    #volume-strip {
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      padding: 0 8px;
-      margin-bottom: 3px;
-      gap: 4px;
-    }
-    .vol-label {
-      font-size: 0.25rem;
-      color: #444;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-    }
-    .vol-slider {
-      width: 40px;
-      height: 3px;
-      background: linear-gradient(90deg, #333, #555);
-      border-radius: 2px;
-    }
-
-    /* Title label */
     #title-label {
       text-align: center;
       margin-bottom: 6px;
@@ -107,43 +83,23 @@
       border-radius: 4px;
       padding: 3px;
       margin: 0 auto;
-      box-shadow:
-        0 2px 8px rgba(0,0,0,0.6) inset,
-        0 0 0 1px #222;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.6) inset, 0 0 0 1px #222;
+      position: relative;
     }
 
-    /* Game container — the emulator renders inside this */
+    /* Game container */
     #game {
-      position: relative;
-      overflow: hidden;
       background: #000;
       border-radius: 2px;
-      line-height: 0;
+      min-height: 80px;
     }
-    /* Force the emulator canvas to fill */
+    /* Emulator canvas */
     #game canvas {
-      display: block;
+      display: block !important;
       width: 100% !important;
       height: auto !important;
       image-rendering: pixelated;
       image-rendering: crisp-edges;
-    }
-    /* Hide the emulator's own UI elements */
-    #game div[style], #game button, #game input {
-      display: none !important;
-    }
-
-    /* Subtle scanlines */
-    #screen-bezel::after {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: repeating-linear-gradient(
-        0deg, transparent, transparent 2px,
-        rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px
-      );
-      pointer-events: none;
-      border-radius: 4px;
     }
 
     /* Power LED row */
@@ -154,29 +110,11 @@
       margin-top: 3px;
       padding: 0 6px;
     }
-    .led-group {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-    .led-label {
-      font-size: 0.35rem;
-      color: #444;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-    }
-    .led {
-      width: 6px; height: 6px;
-      border-radius: 50%;
-      background: #2a1a1a;
-      box-shadow: 0 0 2px rgba(0,0,0,0.5) inset;
-    }
-    .led.on {
-      background: #ff2020;
-      box-shadow: 0 0 6px #ff2020, 0 0 14px rgba(255,32,32,0.4);
-    }
+    .led-group { display: flex; align-items: center; gap: 5px; }
+    .led-label { font-size: 0.35rem; color: #444; letter-spacing: 2px; text-transform: uppercase; }
+    .led { width: 6px; height: 6px; border-radius: 50%; background: #2a1a1a; box-shadow: 0 0 2px rgba(0,0,0,0.5) inset; }
+    .led.on { background: #ff2020; box-shadow: 0 0 6px #ff2020, 0 0 14px rgba(255,32,32,0.4); }
 
-    /* Start / Loading */
     #start-btn {
       margin-top: 4px;
       padding: 6px 24px;
@@ -191,58 +129,35 @@
       letter-spacing: 2px;
       display: none;
       box-shadow: 0 3px 0 #3a2890, 0 4px 8px rgba(0,0,0,0.4);
-      transition: transform 0.1s, box-shadow 0.1s;
     }
     #start-btn:hover { transform: translateY(1px); box-shadow: 0 2px 0 #3a2890; }
     #start-btn:active { transform: translateY(3px); box-shadow: 0 0 0 #3a2890; }
-    #loading {
-      color: #6a4ae0;
-      font-size: 0.5rem;
-      margin-top: 6px;
-      letter-spacing: 1px;
-      animation: blink 1s steps(1) infinite;
-    }
+    #loading { color: #6a4ae0; font-size: 0.5rem; margin-top: 6px; letter-spacing: 1px; animation: blink 1s steps(1) infinite; }
     @keyframes blink { 50% { opacity: 0; } }
 
-    /* Desktop keyboard hints */
+    /* Desktop hints */
     #controls {
-      margin-top: 6px;
-      font-size: 0.4rem;
-      text-align: center;
-      color: #555;
-      line-height: 2.2;
+      margin-top: 6px; font-size: 0.4rem; text-align: center; color: #555; line-height: 2.2;
     }
     #controls kbd {
-      background: #2a2a2a;
-      border: 1px solid #444;
-      border-bottom: 2px solid #333;
-      border-radius: 3px;
-      padding: 2px 6px;
-      font-family: 'Press Start 2P', monospace;
-      font-size: 0.33rem;
-      color: #aaa;
+      background: #2a2a2a; border: 1px solid #444; border-bottom: 2px solid #333;
+      border-radius: 3px; padding: 2px 6px; font-family: 'Press Start 2P', monospace;
+      font-size: 0.33rem; color: #aaa;
     }
-
-    /* Bottom brand */
-    #bottom-brand {
-      margin-top: 6px;
-      font-size: 0.3rem;
-      color: #333;
-      letter-spacing: 4px;
-      text-transform: uppercase;
-    }
+    #bottom-brand { margin-top: 6px; font-size: 0.3rem; color: #333; letter-spacing: 4px; text-transform: uppercase; }
 
     /* ═══════════════════════════════════════
-       MOBILE CONTROLLER (3-button Genesis)
+       MOBILE CONTROLLER — Genesis 3-button
+       Inspired by the classic controller shape
        ═══════════════════════════════════════ */
     #mobile-controls {
       display: none;
       width: 95vw;
       max-width: 540px;
       margin-top: 0;
-      padding: 10px 0 18px;
+      padding: 0;
       position: relative;
-      height: 220px;
+      height: 230px;
       user-select: none;
       -webkit-user-select: none;
       touch-action: none;
@@ -255,23 +170,54 @@
         0 -1px 0 #0a0a0a inset;
     }
 
-    /* Joystick */
+    /* SEGA GENESIS branding between console and controls */
+    .ctrl-brand {
+      text-align: center;
+      padding: 6px 0 2px;
+    }
+    .ctrl-brand-sega {
+      font-size: 0.32rem;
+      color: #555;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+    .ctrl-brand-genesis {
+      font-size: 0.5rem;
+      color: #666;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      font-weight: bold;
+    }
+
+    /* Joystick — glossy recessed circle like the real controller */
     .joystick-zone {
       position: absolute;
-      left: 10px;
-      top: 10px;
+      left: 8px;
+      top: 36px;
       width: 150px;
       height: 150px;
+    }
+    .joystick-outer {
+      position: absolute;
+      left: 50%; top: 50%;
+      transform: translate(-50%, -50%);
+      width: 125px; height: 125px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #2a2a2a 0%, #111 50%, #1a1a1a 100%);
+      border: 2px solid #333;
+      box-shadow:
+        0 0 0 3px #0a0a0a,
+        0 3px 10px rgba(0,0,0,0.6) inset;
     }
     .joystick-base {
       position: absolute;
       left: 50%; top: 50%;
       transform: translate(-50%, -50%);
-      width: 115px; height: 115px;
+      width: 90px; height: 90px;
       border-radius: 50%;
-      background: radial-gradient(circle, #111, #0a0a0a);
-      border: 2px solid #2a2a2a;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.6) inset, 0 2px 4px rgba(0,0,0,0.4);
+      background: radial-gradient(circle, #181818, #0e0e0e);
+      border: 2px solid #252525;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.5) inset;
     }
     .joystick-knob {
       position: absolute;
@@ -279,93 +225,122 @@
       transform: translate(-50%, -50%);
       width: 50px; height: 50px;
       border-radius: 50%;
-      background: radial-gradient(circle at 38% 35%, #444, #1a1a1a);
-      border: 2px solid #333;
-      box-shadow: 0 3px 4px rgba(0,0,0,0.6), 0 1px 0 rgba(255,255,255,0.08) inset;
+      background: radial-gradient(circle at 38% 35%, #3a3a3a, #1a1a1a);
+      border: 2px solid #2a2a2a;
+      box-shadow: 0 3px 4px rgba(0,0,0,0.6), 0 1px 0 rgba(255,255,255,0.06) inset;
       transition: none;
     }
+    /* Red arrow indicators around the d-pad ring */
+    .dpad-arrow {
+      position: absolute;
+      width: 0; height: 0;
+      z-index: 2;
+    }
+    .arrow-up { left: 50%; top: 6px; transform: translateX(-50%); border-left: 4px solid transparent; border-right: 4px solid transparent; border-bottom: 5px solid #cc2020; }
+    .arrow-down { left: 50%; bottom: 6px; transform: translateX(-50%); border-left: 4px solid transparent; border-right: 4px solid transparent; border-top: 5px solid #cc2020; }
+    .arrow-left { top: 50%; left: 6px; transform: translateY(-50%); border-top: 4px solid transparent; border-bottom: 4px solid transparent; border-right: 5px solid #cc2020; }
+    .arrow-right { top: 50%; right: 6px; transform: translateY(-50%); border-top: 4px solid transparent; border-bottom: 4px solid transparent; border-left: 5px solid #cc2020; }
 
-    /* Genesis 3-button layout (C, B, A — left to right, ascending) */
+    /* START button — small pill, positioned above action buttons */
+    .start-area {
+      position: absolute;
+      right: 110px;
+      top: 38px;
+      text-align: center;
+    }
+    .start-label {
+      font-size: 0.25rem;
+      color: #555;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 3px;
+    }
+    .start-btn-touch {
+      width: 44px; height: 12px;
+      background: linear-gradient(180deg, #3a3a3a, #2a2a2a);
+      border: 1px solid #444;
+      border-radius: 6px;
+      box-shadow: 0 2px 0 #111, 0 1px 4px rgba(0,0,0,0.5);
+      margin: 0 auto;
+    }
+    .start-btn-touch:active, .start-btn-touch.pressed {
+      box-shadow: 0 0 0 #111;
+      transform: translateY(2px);
+    }
+
+    /* A, B, C buttons — recessed area with 3 round buttons */
     .action-buttons {
       position: absolute;
-      right: 10px;
-      top: 10px;
-      display: flex;
-      align-items: flex-end;
-      gap: 6px;
+      right: 8px;
+      top: 60px;
     }
-    .btn-col { text-align: center; }
+    /* Recessed pill-shaped area behind buttons */
+    .btn-recess {
+      width: 170px;
+      height: 80px;
+      background: #0e0e0e;
+      border-radius: 40px;
+      border: 2px solid #252525;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.5) inset;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 0 10px;
+      position: relative;
+    }
+    /* "TRIGGER" label */
+    .trigger-label {
+      position: absolute;
+      top: -14px;
+      right: 10px;
+      font-size: 0.22rem;
+      color: #444;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
     .action-btn {
-      width: 56px; height: 56px;
+      width: 48px; height: 48px;
       border-radius: 50%;
-      color: #ddd;
-      font-size: 0.55rem;
+      background: radial-gradient(circle at 40% 35%, #3a3a3a, #1a1a1a);
+      border: 2px solid #2a2a2a;
+      color: #cc2020;
+      font-size: 0.5rem;
       font-family: 'Press Start 2P', monospace;
       font-weight: bold;
       display: flex;
       align-items: center;
       justify-content: center;
       box-shadow:
-        0 3px 0 rgba(0,0,0,0.5),
+        0 3px 0 #0a0a0a,
         0 4px 8px rgba(0,0,0,0.4),
-        0 1px 0 rgba(255,255,255,0.1) inset;
+        0 1px 0 rgba(255,255,255,0.06) inset;
     }
     .action-btn:active, .action-btn.pressed {
-      box-shadow: 0 1px 0 rgba(0,0,0,0.4), 0 1px 3px rgba(0,0,0,0.3);
+      box-shadow: 0 1px 0 #0a0a0a, 0 1px 3px rgba(0,0,0,0.3);
       transform: translateY(2px);
-    }
-    /* Genesis button colors */
-    .btn-a {
-      background: radial-gradient(circle at 40% 35%, #6a4ae0, #3a2890);
-      border: 2px solid #2a1870;
-      margin-bottom: 20px;
-    }
-    .btn-b {
-      background: radial-gradient(circle at 40% 35%, #5a5a5a, #333);
-      border: 2px solid #222;
-      margin-bottom: 10px;
-    }
-    .btn-c {
-      background: radial-gradient(circle at 40% 35%, #5a5a5a, #333);
-      border: 2px solid #222;
-      margin-bottom: 0;
-    }
-    .btn-name {
-      font-size: 0.3rem;
-      color: #555;
-      margin-top: 4px;
-      letter-spacing: 1px;
     }
 
-    /* Start button (pill, centered) */
-    .meta-buttons {
+    /* Sega GENESIS text at bottom of controller */
+    .ctrl-bottom-brand {
       position: absolute;
+      bottom: 10px;
       left: 50%;
       transform: translateX(-50%);
-      bottom: 16px;
-      display: flex;
-      gap: 20px;
+      text-align: center;
+      white-space: nowrap;
     }
-    .meta-btn-wrap { text-align: center; }
-    .meta-btn {
-      width: 50px; height: 14px;
-      background: linear-gradient(180deg, #444, #333);
-      border: none;
-      border-radius: 7px;
-      box-shadow: 0 2px 0 #1a1a1a, 0 1px 4px rgba(0,0,0,0.5), 0 1px 0 rgba(255,255,255,0.06) inset;
+    .ctrl-sega-text {
+      font-size: 0.28rem;
+      color: #444;
+      letter-spacing: 2px;
       display: block;
-      margin: 0 auto;
     }
-    .meta-btn:active, .meta-btn.pressed {
-      box-shadow: 0 0 0 #1a1a1a;
-      transform: translateY(2px);
-    }
-    .meta-label {
-      font-size: 0.3rem;
+    .ctrl-genesis-text {
+      font-size: 0.45rem;
       color: #555;
-      margin-top: 8px;
-      letter-spacing: 1px;
-      text-transform: uppercase;
+      letter-spacing: 3px;
+      font-weight: bold;
     }
 
     @media (pointer: coarse) {
@@ -375,10 +350,7 @@
       #console-body {
         border-radius: 10px 10px 0 0;
         padding-bottom: 2px;
-        box-shadow:
-          0 1px 0 #333 inset,
-          1px 0 0 #2a2a2a inset,
-          -1px 0 0 #2a2a2a inset;
+        box-shadow: 0 1px 0 #333 inset, 1px 0 0 #2a2a2a inset, -1px 0 0 #2a2a2a inset;
       }
     }
     @media (pointer: fine) {
@@ -390,10 +362,6 @@
 
   <div id="console-body">
     <div id="cartridge-slot"></div>
-    <div id="volume-strip">
-      <span class="vol-label">Vol</span>
-      <div class="vol-slider"></div>
-    </div>
 
     <div id="title-label">
       <span class="brand">Sega Genesis</span>
@@ -415,34 +383,45 @@
     </div>
   </div>
 
-  <!-- Mobile controller -->
+  <!-- Mobile controller — Genesis 3-button pad -->
   <div id="mobile-controls">
+    <div class="ctrl-brand">
+      <span class="ctrl-brand-sega">SEGA</span>
+      <span class="ctrl-brand-genesis"> GENESIS</span>
+    </div>
+
+    <!-- Joystick with glossy ring and red arrows -->
     <div class="joystick-zone" id="joystick-zone">
-      <div class="joystick-base">
-        <div class="joystick-knob" id="joystick-knob"></div>
+      <div class="joystick-outer">
+        <div class="dpad-arrow arrow-up"></div>
+        <div class="dpad-arrow arrow-down"></div>
+        <div class="dpad-arrow arrow-left"></div>
+        <div class="dpad-arrow arrow-right"></div>
+        <div class="joystick-base">
+          <div class="joystick-knob" id="joystick-knob"></div>
+        </div>
       </div>
     </div>
 
+    <!-- Start pill -->
+    <div class="start-area">
+      <div class="start-label">Start</div>
+      <div class="start-btn-touch" data-btn="start"></div>
+    </div>
+
+    <!-- A, B, C in recessed pill area -->
     <div class="action-buttons">
-      <div class="btn-col">
-        <div class="action-btn btn-c" data-btn="c">C</div>
-        <div class="btn-name">C</div>
-      </div>
-      <div class="btn-col">
-        <div class="action-btn btn-b" data-btn="b">B</div>
-        <div class="btn-name">B</div>
-      </div>
-      <div class="btn-col">
-        <div class="action-btn btn-a" data-btn="a">A</div>
-        <div class="btn-name">A</div>
+      <div class="btn-recess">
+        <span class="trigger-label">Trigger</span>
+        <div class="action-btn" data-btn="a">A</div>
+        <div class="action-btn" data-btn="b">B</div>
+        <div class="action-btn" data-btn="c">C</div>
       </div>
     </div>
 
-    <div class="meta-buttons">
-      <div class="meta-btn-wrap">
-        <div class="meta-btn" data-btn="start"></div>
-        <div class="meta-label">Start</div>
-      </div>
+    <div class="ctrl-bottom-brand">
+      <span class="ctrl-sega-text">SEGA</span>
+      <span class="ctrl-genesis-text">GENESIS</span>
     </div>
   </div>
 
@@ -463,7 +442,6 @@
     var powerLed = document.getElementById('power-led');
     var romData = null;
 
-    // Load ROM
     fetch('rom.bin')
       .then(function(r) { return r.arrayBuffer(); })
       .then(function(buf) {
@@ -491,17 +469,18 @@
           x: "KeyQ", y: "KeyW", z: "KeyE", mode: "KeyZ"
         },
         cbStarted: function() {
-          // Force canvas sizing after emulator starts
+          // Style the emulator canvas after it loads
           setTimeout(function() {
             var c = document.querySelector('#game canvas');
             if (c) {
+              c.style.display = 'block';
               c.style.width = '100%';
               c.style.height = 'auto';
             }
-            // Hide any emulator UI overlays
-            var divs = document.querySelectorAll('#game > div');
-            divs.forEach(function(d) { d.style.display = 'none'; });
-          }, 200);
+            // Hide emulator's own overlay buttons but NOT the canvas container
+            var els = document.querySelectorAll('#game button, #game input');
+            els.forEach(function(e) { e.style.display = 'none'; });
+          }, 300);
         }
       });
     }
@@ -516,15 +495,11 @@
       var deadZone = 0.3;
       var currentDirs = {};
 
-      // Simulate keyboard events for the emulator
       function simKey(code, type) {
-        var e = new KeyboardEvent(type, { code: code, bubbles: true });
-        document.dispatchEvent(e);
+        document.dispatchEvent(new KeyboardEvent(type, { code: code, bubbles: true }));
       }
 
-      var dirKeys = {
-        up: 'ArrowUp', down: 'ArrowDown', left: 'ArrowLeft', right: 'ArrowRight'
-      };
+      var dirKeys = { up: 'ArrowUp', down: 'ArrowDown', left: 'ArrowLeft', right: 'ArrowRight' };
 
       function updateDirs(dirs) {
         ['up','down','left','right'].forEach(function(d) {
@@ -592,10 +567,8 @@
       });
     })();
 
-    // ── Action & meta button touch ──
-    var btnKeyMap = {
-      a: 'KeyA', b: 'KeyS', c: 'KeyD', start: 'Enter'
-    };
+    // ── Action & Start button touch ──
+    var btnKeyMap = { a: 'KeyA', b: 'KeyS', c: 'KeyD', start: 'Enter' };
 
     document.querySelectorAll('[data-btn]').forEach(function(el) {
       function simKey(code, type) {
@@ -603,14 +576,12 @@
       }
       function press(e) {
         e.preventDefault();
-        var btn = el.getAttribute('data-btn');
-        simKey(btnKeyMap[btn], 'keydown');
+        simKey(btnKeyMap[el.getAttribute('data-btn')], 'keydown');
         el.classList.add('pressed');
       }
       function release(e) {
         e.preventDefault();
-        var btn = el.getAttribute('data-btn');
-        simKey(btnKeyMap[btn], 'keyup');
+        simKey(btnKeyMap[el.getAttribute('data-btn')], 'keyup');
         el.classList.remove('pressed');
       }
       el.addEventListener('touchstart', press, { passive: false });
