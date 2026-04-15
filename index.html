@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>Puyo Puyo 2 - Sega Genesis</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #0a0a12;
+      background-image: radial-gradient(ellipse at 50% 30%, #14142a 0%, #0a0a12 70%);
+      font-family: 'Press Start 2P', monospace;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      overflow-x: hidden;
+      touch-action: manipulation;
+    }
+
+    /* ═══════════════════════════════════════
+       GENESIS CONSOLE SHELL
+       ═══════════════════════════════════════ */
+    #console-body {
+      background: #1a1a1a;
+      border-radius: 10px 10px 6px 6px;
+      padding: 4px 12px 4px;
+      box-shadow:
+        0 1px 0 #333 inset,
+        0 -1px 0 #0a0a0a inset,
+        1px 0 0 #2a2a2a inset,
+        -1px 0 0 #2a2a2a inset,
+        0 8px 40px rgba(0,0,0,0.7);
+      position: relative;
+      max-width: 540px;
+      width: 95vw;
+    }
+
+    /* Top accent stripe — Genesis purple/blue */
+    #console-body::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #1a1a1a 0%, #1a1a1a 20%, #4a3aaa 20%, #6a4ae0 50%, #4a3aaa 80%, #1a1a1a 80%);
+      border-radius: 10px 10px 0 0;
+    }
+
+    /* Cartridge slot */
+    #cartridge-slot {
+      background: linear-gradient(180deg, #0e0e0e, #181818);
+      height: 5px;
+      border-radius: 2px;
+      margin: 2px 60px 3px;
+      box-shadow: 0 1px 0 rgba(255,255,255,0.04), 0 -1px 2px rgba(0,0,0,0.5) inset;
+    }
+
+    /* Volume slider decorative */
+    #volume-strip {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding: 0 8px;
+      margin-bottom: 3px;
+      gap: 4px;
+    }
+    .vol-label {
+      font-size: 0.25rem;
+      color: #444;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+    .vol-slider {
+      width: 40px;
+      height: 3px;
+      background: linear-gradient(90deg, #333, #555);
+      border-radius: 2px;
+    }
+
+    /* Title label */
+    #title-label {
+      text-align: center;
+      margin-bottom: 6px;
+    }
+    #title-label .brand {
+      font-size: 0.4rem;
+      color: #6a4ae0;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 3px;
+    }
+    #title-label .game-name {
+      font-size: 0.58rem;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    /* Screen bezel */
+    #screen-bezel {
+      background: #0e0e0e;
+      border-radius: 4px;
+      padding: 3px;
+      margin: 0 auto;
+      box-shadow:
+        0 2px 8px rgba(0,0,0,0.6) inset,
+        0 0 0 1px #222;
+    }
+
+    /* Game container — the emulator renders inside this */
+    #game {
+      position: relative;
+      overflow: hidden;
+      background: #000;
+      border-radius: 2px;
+      line-height: 0;
+    }
+    /* Force the emulator canvas to fill */
+    #game canvas {
+      display: block;
+      width: 100% !important;
+      height: auto !important;
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
+    }
+    /* Hide the emulator's own UI elements */
+    #game div[style], #game button, #game input {
+      display: none !important;
+    }
+
+    /* Subtle scanlines */
+    #screen-bezel::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: repeating-linear-gradient(
+        0deg, transparent, transparent 2px,
+        rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px
+      );
+      pointer-events: none;
+      border-radius: 4px;
+    }
+
+    /* Power LED row */
+    #power-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 3px;
+      padding: 0 6px;
+    }
+    .led-group {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .led-label {
+      font-size: 0.35rem;
+      color: #444;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+    .led {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: #2a1a1a;
+      box-shadow: 0 0 2px rgba(0,0,0,0.5) inset;
+    }
+    .led.on {
+      background: #ff2020;
+      box-shadow: 0 0 6px #ff2020, 0 0 14px rgba(255,32,32,0.4);
+    }
+
+    /* Start / Loading */
+    #start-btn {
+      margin-top: 4px;
+      padding: 6px 24px;
+      font-size: 0.6rem;
+      font-family: 'Press Start 2P', monospace;
+      background: #6a4ae0;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      display: none;
+      box-shadow: 0 3px 0 #3a2890, 0 4px 8px rgba(0,0,0,0.4);
+      transition: transform 0.1s, box-shadow 0.1s;
+    }
+    #start-btn:hover { transform: translateY(1px); box-shadow: 0 2px 0 #3a2890; }
+    #start-btn:active { transform: translateY(3px); box-shadow: 0 0 0 #3a2890; }
+    #loading {
+      color: #6a4ae0;
+      font-size: 0.5rem;
+      margin-top: 6px;
+      letter-spacing: 1px;
+      animation: blink 1s steps(1) infinite;
+    }
+    @keyframes blink { 50% { opacity: 0; } }
+
+    /* Desktop keyboard hints */
+    #controls {
+      margin-top: 6px;
+      font-size: 0.4rem;
+      text-align: center;
+      color: #555;
+      line-height: 2.2;
+    }
+    #controls kbd {
+      background: #2a2a2a;
+      border: 1px solid #444;
+      border-bottom: 2px solid #333;
+      border-radius: 3px;
+      padding: 2px 6px;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.33rem;
+      color: #aaa;
+    }
+
+    /* Bottom brand */
+    #bottom-brand {
+      margin-top: 6px;
+      font-size: 0.3rem;
+      color: #333;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+    }
+
+    /* ═══════════════════════════════════════
+       MOBILE CONTROLLER (3-button Genesis)
+       ═══════════════════════════════════════ */
+    #mobile-controls {
+      display: none;
+      width: 95vw;
+      max-width: 540px;
+      margin-top: 0;
+      padding: 10px 0 18px;
+      position: relative;
+      height: 220px;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: none;
+      background: #1a1a1a;
+      border-radius: 0 0 10px 10px;
+      box-shadow:
+        0 8px 40px rgba(0,0,0,0.7),
+        1px 0 0 #2a2a2a inset,
+        -1px 0 0 #2a2a2a inset,
+        0 -1px 0 #0a0a0a inset;
+    }
+
+    /* Joystick */
+    .joystick-zone {
+      position: absolute;
+      left: 10px;
+      top: 10px;
+      width: 150px;
+      height: 150px;
+    }
+    .joystick-base {
+      position: absolute;
+      left: 50%; top: 50%;
+      transform: translate(-50%, -50%);
+      width: 115px; height: 115px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #111, #0a0a0a);
+      border: 2px solid #2a2a2a;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.6) inset, 0 2px 4px rgba(0,0,0,0.4);
+    }
+    .joystick-knob {
+      position: absolute;
+      left: 50%; top: 50%;
+      transform: translate(-50%, -50%);
+      width: 50px; height: 50px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 38% 35%, #444, #1a1a1a);
+      border: 2px solid #333;
+      box-shadow: 0 3px 4px rgba(0,0,0,0.6), 0 1px 0 rgba(255,255,255,0.08) inset;
+      transition: none;
+    }
+
+    /* Genesis 3-button layout (C, B, A — left to right, ascending) */
+    .action-buttons {
+      position: absolute;
+      right: 10px;
+      top: 10px;
+      display: flex;
+      align-items: flex-end;
+      gap: 6px;
+    }
+    .btn-col { text-align: center; }
+    .action-btn {
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      color: #ddd;
+      font-size: 0.55rem;
+      font-family: 'Press Start 2P', monospace;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow:
+        0 3px 0 rgba(0,0,0,0.5),
+        0 4px 8px rgba(0,0,0,0.4),
+        0 1px 0 rgba(255,255,255,0.1) inset;
+    }
+    .action-btn:active, .action-btn.pressed {
+      box-shadow: 0 1px 0 rgba(0,0,0,0.4), 0 1px 3px rgba(0,0,0,0.3);
+      transform: translateY(2px);
+    }
+    /* Genesis button colors */
+    .btn-a {
+      background: radial-gradient(circle at 40% 35%, #6a4ae0, #3a2890);
+      border: 2px solid #2a1870;
+      margin-bottom: 20px;
+    }
+    .btn-b {
+      background: radial-gradient(circle at 40% 35%, #5a5a5a, #333);
+      border: 2px solid #222;
+      margin-bottom: 10px;
+    }
+    .btn-c {
+      background: radial-gradient(circle at 40% 35%, #5a5a5a, #333);
+      border: 2px solid #222;
+      margin-bottom: 0;
+    }
+    .btn-name {
+      font-size: 0.3rem;
+      color: #555;
+      margin-top: 4px;
+      letter-spacing: 1px;
+    }
+
+    /* Start button (pill, centered) */
+    .meta-buttons {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 16px;
+      display: flex;
+      gap: 20px;
+    }
+    .meta-btn-wrap { text-align: center; }
+    .meta-btn {
+      width: 50px; height: 14px;
+      background: linear-gradient(180deg, #444, #333);
+      border: none;
+      border-radius: 7px;
+      box-shadow: 0 2px 0 #1a1a1a, 0 1px 4px rgba(0,0,0,0.5), 0 1px 0 rgba(255,255,255,0.06) inset;
+      display: block;
+      margin: 0 auto;
+    }
+    .meta-btn:active, .meta-btn.pressed {
+      box-shadow: 0 0 0 #1a1a1a;
+      transform: translateY(2px);
+    }
+    .meta-label {
+      font-size: 0.3rem;
+      color: #555;
+      margin-top: 8px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    @media (pointer: coarse) {
+      #mobile-controls { display: block; }
+      #controls { display: none; }
+      #bottom-brand { display: none; }
+      #console-body {
+        border-radius: 10px 10px 0 0;
+        padding-bottom: 2px;
+        box-shadow:
+          0 1px 0 #333 inset,
+          1px 0 0 #2a2a2a inset,
+          -1px 0 0 #2a2a2a inset;
+      }
+    }
+    @media (pointer: fine) {
+      #mobile-controls { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="console-body">
+    <div id="cartridge-slot"></div>
+    <div id="volume-strip">
+      <span class="vol-label">Vol</span>
+      <div class="vol-slider"></div>
+    </div>
+
+    <div id="title-label">
+      <span class="brand">Sega Genesis</span>
+      <span class="game-name">Puyo Puyo 2</span>
+    </div>
+
+    <div id="screen-bezel">
+      <div id="game"></div>
+    </div>
+
+    <div id="power-row">
+      <div class="led-group">
+        <span class="led" id="power-led"></span>
+        <span class="led-label">Power</span>
+      </div>
+      <div id="loading">Loading...</div>
+      <button id="start-btn" onclick="launchGame()">&#9654; Start</button>
+      <span class="led-label" style="visibility:hidden">Pad</span>
+    </div>
+  </div>
+
+  <!-- Mobile controller -->
+  <div id="mobile-controls">
+    <div class="joystick-zone" id="joystick-zone">
+      <div class="joystick-base">
+        <div class="joystick-knob" id="joystick-knob"></div>
+      </div>
+    </div>
+
+    <div class="action-buttons">
+      <div class="btn-col">
+        <div class="action-btn btn-c" data-btn="c">C</div>
+        <div class="btn-name">C</div>
+      </div>
+      <div class="btn-col">
+        <div class="action-btn btn-b" data-btn="b">B</div>
+        <div class="btn-name">B</div>
+      </div>
+      <div class="btn-col">
+        <div class="action-btn btn-a" data-btn="a">A</div>
+        <div class="btn-name">A</div>
+      </div>
+    </div>
+
+    <div class="meta-buttons">
+      <div class="meta-btn-wrap">
+        <div class="meta-btn" data-btn="start"></div>
+        <div class="meta-label">Start</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="controls">
+    <kbd>&#8592;&#8593;&#8594;&#8595;</kbd> Move &nbsp;&bull;&nbsp;
+    <kbd>A</kbd> A &nbsp;&bull;&nbsp;
+    <kbd>S</kbd> B &nbsp;&bull;&nbsp;
+    <kbd>D</kbd> C &nbsp;&bull;&nbsp;
+    <kbd>Enter</kbd> Start
+  </div>
+
+  <div id="bottom-brand">16-Bit Video Game System</div>
+
+  <script src="Genesis.min.js"></script>
+  <script>
+    var startBtn = document.getElementById('start-btn');
+    var loadingEl = document.getElementById('loading');
+    var powerLed = document.getElementById('power-led');
+    var romData = null;
+
+    // Load ROM
+    fetch('rom.bin')
+      .then(function(r) { return r.arrayBuffer(); })
+      .then(function(buf) {
+        romData = buf;
+        loadingEl.style.display = 'none';
+        startBtn.style.display = 'inline-block';
+      })
+      .catch(function() {
+        loadingEl.textContent = 'ROM not found.';
+      });
+
+    function launchGame() {
+      startBtn.style.display = 'none';
+      powerLed.classList.add('on');
+
+      embedGenesis({
+        container: "game",
+        name: "Puyo Puyo 2",
+        rom: romData,
+        soundEnabled: true,
+        showMobileControls: false,
+        player1: {
+          up: "ArrowUp", down: "ArrowDown", left: "ArrowLeft", right: "ArrowRight",
+          start: "Enter", a: "KeyA", b: "KeyS", c: "KeyD",
+          x: "KeyQ", y: "KeyW", z: "KeyE", mode: "KeyZ"
+        },
+        cbStarted: function() {
+          // Force canvas sizing after emulator starts
+          setTimeout(function() {
+            var c = document.querySelector('#game canvas');
+            if (c) {
+              c.style.width = '100%';
+              c.style.height = 'auto';
+            }
+            // Hide any emulator UI overlays
+            var divs = document.querySelectorAll('#game > div');
+            divs.forEach(function(d) { d.style.display = 'none'; });
+          }, 200);
+        }
+      });
+    }
+
+    // ── Virtual joystick ──
+    (function() {
+      var zone = document.getElementById('joystick-zone');
+      var knob = document.getElementById('joystick-knob');
+      if (!zone || !knob) return;
+      var activeTouch = null;
+      var maxDist = 38;
+      var deadZone = 0.3;
+      var currentDirs = {};
+
+      // Simulate keyboard events for the emulator
+      function simKey(code, type) {
+        var e = new KeyboardEvent(type, { code: code, bubbles: true });
+        document.dispatchEvent(e);
+      }
+
+      var dirKeys = {
+        up: 'ArrowUp', down: 'ArrowDown', left: 'ArrowLeft', right: 'ArrowRight'
+      };
+
+      function updateDirs(dirs) {
+        ['up','down','left','right'].forEach(function(d) {
+          if (dirs[d] && !currentDirs[d]) simKey(dirKeys[d], 'keydown');
+          if (!dirs[d] && currentDirs[d]) simKey(dirKeys[d], 'keyup');
+          currentDirs[d] = dirs[d];
+        });
+      }
+
+      function handleMove(cx, cy) {
+        var rect = zone.getBoundingClientRect();
+        var centerX = rect.left + rect.width / 2;
+        var centerY = rect.top + rect.height / 2;
+        var dx = cx - centerX;
+        var dy = cy - centerY;
+        var dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist > maxDist) { dx = dx / dist * maxDist; dy = dy / dist * maxDist; dist = maxDist; }
+        knob.style.transform = 'translate(calc(-50% + ' + dx + 'px), calc(-50% + ' + dy + 'px))';
+        var norm = dist / maxDist;
+        if (norm < deadZone) {
+          updateDirs({ up: false, down: false, left: false, right: false });
+          return;
+        }
+        var angle = Math.atan2(dy, dx);
+        var dirs = { up: false, down: false, left: false, right: false };
+        if (angle > -2.75 && angle < -0.39) dirs.up = true;
+        if (angle > 0.39 && angle < 2.75) dirs.down = true;
+        if (Math.abs(angle) > 1.96) dirs.left = true;
+        if (Math.abs(angle) < 1.18) dirs.right = true;
+        updateDirs(dirs);
+      }
+
+      function resetStick() {
+        knob.style.transform = 'translate(-50%, -50%)';
+        updateDirs({ up: false, down: false, left: false, right: false });
+        activeTouch = null;
+      }
+
+      zone.addEventListener('touchstart', function(e) {
+        e.preventDefault();
+        activeTouch = e.changedTouches[0].identifier;
+        handleMove(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
+      }, { passive: false });
+
+      document.addEventListener('touchmove', function(e) {
+        if (activeTouch === null) return;
+        for (var i = 0; i < e.changedTouches.length; i++) {
+          if (e.changedTouches[i].identifier === activeTouch) {
+            e.preventDefault();
+            handleMove(e.changedTouches[i].clientX, e.changedTouches[i].clientY);
+            return;
+          }
+        }
+      }, { passive: false });
+
+      document.addEventListener('touchend', function(e) {
+        for (var i = 0; i < e.changedTouches.length; i++) {
+          if (e.changedTouches[i].identifier === activeTouch) { resetStick(); return; }
+        }
+      });
+      document.addEventListener('touchcancel', function(e) {
+        for (var i = 0; i < e.changedTouches.length; i++) {
+          if (e.changedTouches[i].identifier === activeTouch) { resetStick(); return; }
+        }
+      });
+    })();
+
+    // ── Action & meta button touch ──
+    var btnKeyMap = {
+      a: 'KeyA', b: 'KeyS', c: 'KeyD', start: 'Enter'
+    };
+
+    document.querySelectorAll('[data-btn]').forEach(function(el) {
+      function simKey(code, type) {
+        document.dispatchEvent(new KeyboardEvent(type, { code: code, bubbles: true }));
+      }
+      function press(e) {
+        e.preventDefault();
+        var btn = el.getAttribute('data-btn');
+        simKey(btnKeyMap[btn], 'keydown');
+        el.classList.add('pressed');
+      }
+      function release(e) {
+        e.preventDefault();
+        var btn = el.getAttribute('data-btn');
+        simKey(btnKeyMap[btn], 'keyup');
+        el.classList.remove('pressed');
+      }
+      el.addEventListener('touchstart', press, { passive: false });
+      el.addEventListener('touchend', release, { passive: false });
+      el.addEventListener('touchcancel', release, { passive: false });
+    });
+  </script>
+</body>
+</html>
