@@ -60,8 +60,8 @@
 
     #title-label {
       text-align: center;
-      margin-bottom: 8px;
-      margin-top: 4px;
+      margin-top: 3px;
+      margin-bottom: 0;
     }
     #title-label .brand {
       font-size: 0.4rem;
@@ -172,29 +172,23 @@
     }
 
     /* SEGA GENESIS branding between console and controls */
-    /* Single SEGA GENESIS logo — centered between d-pad and buttons */
-    .ctrl-brand {
-      position: absolute;
-      left: 50%;
-      top: 105px;
-      transform: translateX(-50%);
+    /* SEGA GENESIS logo — in the console top area */
+    #sega-brand {
       text-align: center;
-      white-space: nowrap;
-      z-index: 3;
+      margin: 4px 0 2px;
     }
-    .ctrl-brand-sega {
+    #sega-brand .brand-sega {
       font-family: Arial, Helvetica, sans-serif;
-      font-size: 0.5rem;
-      color: #666;
+      font-size: 0.45rem;
+      color: #888;
       letter-spacing: 3px;
       text-transform: uppercase;
-      display: block;
       font-weight: bold;
     }
-    .ctrl-brand-genesis {
+    #sega-brand .brand-genesis {
       font-family: Arial, Helvetica, sans-serif;
-      font-size: 0.85rem;
-      color: #777;
+      font-size: 0.8rem;
+      color: #999;
       letter-spacing: 4px;
       text-transform: uppercase;
       font-weight: 900;
@@ -354,12 +348,17 @@
   <div id="console-body">
     <div id="cartridge-slot"></div>
 
-    <div id="title-label">
-      <span class="game-name">Puyo Puyo 2</span>
+    <div id="sega-brand">
+      <span class="brand-sega">SEGA</span>
+      <span class="brand-genesis"> GENESIS</span>
     </div>
 
     <div id="screen-bezel">
       <div id="game"></div>
+    </div>
+
+    <div id="title-label">
+      <span class="game-name">Puyo Puyo 2</span>
     </div>
 
     <div id="power-row">
@@ -375,11 +374,6 @@
 
   <!-- Mobile controller — Genesis 3-button pad -->
   <div id="mobile-controls">
-    <div class="ctrl-brand">
-      <span class="ctrl-brand-sega">SEGA</span>
-      <span class="ctrl-brand-genesis"> GENESIS</span>
-    </div>
-
     <!-- Joystick with glossy ring and red arrows -->
     <div class="joystick-zone" id="joystick-zone">
       <div class="joystick-outer">
